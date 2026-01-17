@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.PartnerViewModels"
+             xmlns:views="clr-namespace:BellaLink.App.Views" 
+             x:Class="BellaLink.App.Views.PartnerViews.PartnerDashboardPage"
+             Title="Painel Profissional"
+             BackgroundColor="#F5F5F5"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Spacing="20" Padding="20,20,20,90">
+
+                <Grid ColumnDefinitions="*, Auto, Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="Painel Profissional" TextColor="#999" FontSize="14" />
+                        <Label Text="{Binding PartnerName}" TextColor="#333" FontSize="24" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+
+                    <ImageButton Grid.Column="1" Command="{Binding ExitToProfilesCommand}" BackgroundColor="Transparent" HeightRequest="30" WidthRequest="30" Margin="0,0,15,0" VerticalOptions="Center" HorizontalOptions="End">
+                        <ImageButton.Source>
+                            <FontImageSource Glyph="↩" Color="#FF4081" Size="20" />
+                        </ImageButton.Source>
+                    </ImageButton>
+
+                    <Border Grid.Column="2" StrokeThickness="0" HeightRequest="45" WidthRequest="45" StrokeShape="RoundRectangle 25" Margin="5,0,0,0" BackgroundColor="#E0E0E0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToProfileCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                            <Label Text="👤" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                    <Border Grid.Column="0" BackgroundColor="#FF4081" StrokeShape="RoundRectangle 15" Padding="15" HeightRequest="100" StrokeThickness="0">
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="Agendamentos" TextColor="White" FontSize="12" />
+                            <Label Text="8" TextColor="White" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="Hoje" TextColor="White" FontSize="10" Opacity="0.8" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" BackgroundColor="White" StrokeShape="RoundRectangle 15" Padding="15" HeightRequest="100" StrokeThickness="0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToFinancialCommand}"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="Faturamento" TextColor="#666" FontSize="12" />
+                            <Label Text="Ver Saldo" TextColor="#333" FontSize="20" FontAttributes="Bold" />
+                            <Label Text="Toque para abrir" TextColor="#999" FontSize="10" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Label Text="Ferramentas de Gestão" FontAttributes="Bold" FontSize="18" TextColor="#333" Margin="0,10,0,0"/>
+
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="15" RowDefinitions="Auto, Auto" RowSpacing="15">
+
+                    <Border Grid.Row="0" Grid.Column="0" BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="15" HeightRequest="110" StrokeThickness="0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToFinancialCommand}"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="Center">
+                            <Label Text="💰" FontSize="30" HorizontalOptions="Center"/>
+                            <Label Text="Fluxo de Caixa" TextColor="#333" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1" BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="15" HeightRequest="110" StrokeThickness="0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToShoppingCommand}"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="Center">
+                            <Label Text="🛒" FontSize="30" HorizontalOptions="Center"/>
+                            <Label Text="Lista de Compras" TextColor="#333" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0" BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="15" HeightRequest="110" StrokeThickness="0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToPromoCommand}"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="Center">
+                            <Label Text="📢" FontSize="30" HorizontalOptions="Center"/>
+                            <Label Text="Criar Promoção" TextColor="#333" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="15" HeightRequest="110" StrokeThickness="0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToUploadCommand}"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="Center">
+                            <Label Text="🎬" FontSize="30" HorizontalOptions="Center"/>
+                            <Label Text="Postar Vídeo" TextColor="#333" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <Label Text="Dicas para você" FontAttributes="Bold" FontSize="18" TextColor="#333" Margin="0,10,0,0"/>
+                <CollectionView ItemsSource="{Binding Banners}" HeightRequest="160">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="15" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeShape="RoundRectangle 15" WidthRequest="280" HeightRequest="150" StrokeThickness="0">
+                                <Grid>
+                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
+                                    <BoxView Color="Black" Opacity="0.4" />
+                                    <VerticalStackLayout VerticalOptions="End" Padding="15">
+                                        <Label Text="{Binding Title}" TextColor="White" FontAttributes="Bold" FontSize="16" LineBreakMode="WordWrap" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label Text="Fornecedores Recomendados" FontAttributes="Bold" FontSize="18" TextColor="#333" />
+                <CollectionView ItemsSource="{Binding TopSuppliers}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="15" Margin="0,0,0,10" StrokeThickness="0">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="#333" />
+                                        <Label Text="{Binding Category}" TextColor="#999" FontSize="12" />
+                                        <Label Text="{Binding Rating, StringFormat='★ {0:F1}'}" TextColor="#FFD700" FontSize="12"/>
+                                    </VerticalStackLayout>
+
+                                    <Button Grid.Column="1" Text="Ver Loja" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PartnerDashboardViewModel}}, Path=OpenSupplierDetailsCommand}"
+                                            CommandParameter="{Binding .}"
+                                            HeightRequest="35" FontSize="12" Padding="10,0" CornerRadius="18" BackgroundColor="#E0F2F1" TextColor="#00695C"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <views:FloatingChatButton />
+
+    </Grid>
+</ContentPage>

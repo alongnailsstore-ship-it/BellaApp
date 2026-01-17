@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.DistributorViewModels"
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             x:Class="BellaLink.App.Views.DistributorViews.DistributorOrdersPage"
+             Title="Gestão de Pedidos"
+             BackgroundColor="#F5F7FA"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+        <Grid ColumnDefinitions="Auto, *" Padding="20" BackgroundColor="White">
+            <ImageButton Grid.Column="0" Command="{Binding GoBackCommand}" 
+                         Source="{FontImageSource Glyph='⬅', Color='#333', Size=25}" 
+                         HorizontalOptions="Start" BackgroundColor="Transparent"
+                         HeightRequest="40" WidthRequest="40"/>
+            <Label Grid.Column="1" Text="Pedidos Recebidos" FontSize="20" FontAttributes="Bold" 
+                   TextColor="#2C3E50" VerticalOptions="Center" HorizontalOptions="Center" Margin="-40,0,0,0"/>
+        </Grid>
+
+        <RefreshView Grid.Row="1" Command="{Binding LoadOrdersCommand}" IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding Orders}" Margin="15">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                        <Label Text="📦" FontSize="50"/>
+                        <Label Text="Nenhum pedido encontrado." TextColor="#999"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeShape="RoundRectangle 10" BackgroundColor="White" Padding="15" Margin="0,0,0,10" StrokeThickness="0">
+                            <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, Auto" RowSpacing="5">
+
+                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding PartnerName}" FontAttributes="Bold" TextColor="#333" FontSize="16"/>
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding OrderDate, StringFormat='{0:dd/MM HH:mm}'}" TextColor="#999" FontSize="12"/>
+
+                                <Label Grid.Row="1" Grid.Column="0" Text="{Binding ItemsSummary}" TextColor="#666"/>
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding TotalAmount, StringFormat='R$ {0:F2}'}" TextColor="#27AE60" FontAttributes="Bold"/>
+
+                                <Border Grid.Row="2" Grid.Column="0" BackgroundColor="#E0F2F1" StrokeShape="RoundRectangle 5" HorizontalOptions="Start" Padding="8,2" StrokeThickness="0">
+                                    <Label Text="{Binding Status}" TextColor="#00695C" FontSize="12" FontAttributes="Bold"/>
+                                </Border>
+
+                                <Button Grid.Row="2" Grid.Column="1" Text="Gerenciar" 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DistributorOrdersViewModel}}, Path=AdvanceStatusCommand}"
+                                        CommandParameter="{Binding .}"
+                                        HeightRequest="35" FontSize="12" Padding="10,0" CornerRadius="5"
+                                        BackgroundColor="#2C3E50" TextColor="White"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

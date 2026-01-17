@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.ConsumerViewModels"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             x:Class="BellaLink.App.Views.ConsumerViews.BookingDateTimePage"
+             Title="Data e Hora"
+             BackgroundColor="White"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *, Auto">
+
+        <!-- 1. Cabeçalho -->
+        <Grid Grid.Row="0" Padding="20" HeightRequest="80">
+            <ImageButton Command="{Binding GoBackCommand}"
+                         HorizontalOptions="Start" VerticalOptions="Center"
+                         HeightRequest="40" WidthRequest="40"
+                         BackgroundColor="Transparent">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="⬅" Color="#333" Size="24" />
+                </ImageButton.Source>
+            </ImageButton>
+
+            <Label Text="Escolha o Horário" 
+                   TextColor="#333" 
+                   FontSize="20" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center" />
+        </Grid>
+
+        <!-- 2. Conteúdo -->
+        <ScrollView Grid.Row="1" Padding="20,0">
+            <VerticalStackLayout Spacing="25">
+
+                <!-- Seleção de Data -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Selecione a Data" TextColor="#666" FontAttributes="Bold" />
+                    <Border Stroke="#E0E0E0" StrokeThickness="1" StrokeShape="RoundRectangle 10" Padding="15" BackgroundColor="#F9F9F9">
+                        <DatePicker Date="{Binding SelectedDate}" 
+                                    MinimumDate="{Binding Source={x:Static sys:DateTime.Today}}"
+                                    Format="D"
+                                    TextColor="#FF4081" 
+                                    FontAttributes="Bold" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Seleção de Horário -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Horários Disponíveis" TextColor="#666" FontAttributes="Bold" />
+
+                    <CollectionView ItemsSource="{Binding AvailableTimes}" 
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedTime}">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeThickness="1" StrokeShape="RoundRectangle 20" Padding="0" HeightRequest="40">
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="White" />
+                                                    <Setter Property="Stroke" Value="#FF4081" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="#FF4081" />
+                                                    <Setter Property="Stroke" Value="#FF4081" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+
+                                    <Label Text="{Binding Time}" 
+                                           HorizontalOptions="Center" 
+                                           VerticalOptions="Center" 
+                                           TextColor="#333" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- Resumo -->
+                <Border StrokeThickness="0" BackgroundColor="#FFF0F5" StrokeShape="RoundRectangle 10" Padding="20" Margin="0,20,0,0">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Resumo do Agendamento" TextColor="#FF4081" FontAttributes="Bold" />
+                        <Label Text="{Binding Partner.Name}" TextColor="#333" FontSize="16" />
+                        <Label Text="{Binding TotalAmount, StringFormat='Total a pagar: R$ {0:F2}'}" TextColor="#333" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- 3. Botão Confirmar -->
+        <Border Grid.Row="2" StrokeThickness="0" BackgroundColor="White" Padding="20" Shadow="{Shadow Brush=Black, Offset='0,-5', Opacity=0.1}">
+            <Button Text="Confirmar Agendamento" 
+                    Command="{Binding ConfirmBookingCommand}"
+                    BackgroundColor="#FF4081" 
+                    TextColor="White" 
+                    FontAttributes="Bold" 
+                    CornerRadius="25" 
+                    HeightRequest="50" />
+        </Border>
+
+    </Grid>
+</ContentPage>

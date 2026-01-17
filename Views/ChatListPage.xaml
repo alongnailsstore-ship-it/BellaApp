@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels"
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             x:Class="BellaLink.App.Views.ChatListPage"
+             BackgroundColor="White"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, *">
+
+        <Grid Padding="20" ColumnDefinitions="Auto, *, Auto" BackgroundColor="White">
+
+            <ImageButton Grid.Column="0" Command="{Binding GoBackCommand}" 
+                         Source="{FontImageSource Glyph='⬅', Color='#333', Size=30}"
+                         HorizontalOptions="Start" BackgroundColor="Transparent"
+                         HeightRequest="40" WidthRequest="40"/>
+
+            <Label Grid.Column="1" Text="Conversas" FontSize="22" FontAttributes="Bold" TextColor="#FF4081" 
+                   VerticalOptions="Center" HorizontalOptions="Center"/>
+
+            <ImageButton Grid.Column="2" Command="{Binding AddContactCommand}" 
+                         BackgroundColor="Transparent" HeightRequest="40" WidthRequest="40">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="➕" Color="#333" Size="26"/>
+                </ImageButton.Source>
+            </ImageButton>
+        </Grid>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Chats}" Margin="0,10">
+            <CollectionView.EmptyView>
+                <Label Text="Nenhuma conversa iniciada." TextColor="#999" HorizontalOptions="Center" Margin="20"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="20,10" ColumnDefinitions="60, *, Auto">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChatListViewModel}}, Path=OpenChatCommand}" CommandParameter="{Binding .}"/>
+                        </Grid.GestureRecognizers>
+
+                        <Border StrokeShape="RoundRectangle 30" HeightRequest="60" WidthRequest="60" StrokeThickness="0">
+                            <Image Source="{Binding Photo}" Aspect="AspectFill" BackgroundColor="#EEE"/>
+                        </Border>
+
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Margin="15,0">
+                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" TextColor="#333"/>
+                            <Label Text="{Binding LastMessage}" TextColor="#666" LineBreakMode="TailTruncation"/>
+                        </VerticalStackLayout>
+
+                        <Border Grid.Column="2" BackgroundColor="#FF4081" StrokeShape="RoundRectangle 10" 
+                                HeightRequest="20" WidthRequest="20" VerticalOptions="Center" StrokeThickness="0"
+                                IsVisible="{Binding UnreadCount}">
+                            <Label Text="{Binding UnreadCount}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.RowSpan="2" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                           Color="#FF4081" VerticalOptions="Center" HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

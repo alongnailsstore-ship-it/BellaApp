@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels"
+             x:Class="BellaLink.App.Views.SelectProfilePage"
+             Title="Escolha seu Perfil"
+             BackgroundColor="#F9F9F9"
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="25, 20">
+
+            <Grid ColumnDefinitions="Auto, *" Margin="0,0,0,30">
+                <ImageButton Grid.Column="0" 
+                             Command="{Binding LogoutCommand}" 
+                             HeightRequest="40" WidthRequest="40" 
+                             HorizontalOptions="Start" VerticalOptions="Center"
+                             BackgroundColor="Transparent"
+                             Margin="0,0,15,0">
+                    <ImageButton.Source>
+                        <FontImageSource Glyph="⬅" Color="#333" Size="24" />
+                    </ImageButton.Source>
+                </ImageButton>
+
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                    <Label Text="{Binding UserName, StringFormat='Olá, {0}!'}"
+                           FontSize="24" TextColor="#333" FontAttributes="Bold" />
+
+                    <Label Text="{Binding StatusMessage}"
+                           FontSize="14" TextColor="#FF4081" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Border StrokeThickness="0" BackgroundColor="White" HeightRequest="110" StrokeShape="RoundRectangle 15" Margin="0,0,0,15"
+                    IsEnabled="{Binding CanAccessConsumer}">
+                <Border.Triggers>
+                    <Trigger TargetType="Border" Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.5" />
+                        <Setter Property="BackgroundColor" Value="#F0F0F0" />
+                    </Trigger>
+                </Border.Triggers>
+
+                <Grid ColumnDefinitions="80, *" Padding="15">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectConsumerCommand}" />
+                    </Grid.GestureRecognizers>
+                    <Border BackgroundColor="#FFF0F5" HeightRequest="50" WidthRequest="50" StrokeShape="RoundRectangle 25" StrokeThickness="0">
+                        <Label Text="💖" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                        <Label Text="Sou Consumidor" FontSize="18" FontAttributes="Bold" TextColor="#333" />
+                        <Label Text="Agendar serviços e ver inspirações" FontSize="13" TextColor="#999" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="1" Text="›" FontSize="24" TextColor="#DDD" HorizontalOptions="End" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <Border StrokeThickness="0" BackgroundColor="White" HeightRequest="110" StrokeShape="RoundRectangle 15" Margin="0,0,0,15"
+                    IsEnabled="{Binding CanAccessPartner}">
+                <Border.Triggers>
+                    <Trigger TargetType="Border" Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.5" />
+                        <Setter Property="BackgroundColor" Value="#F0F0F0" />
+                    </Trigger>
+                </Border.Triggers>
+
+                <Grid ColumnDefinitions="80, *" Padding="15">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPartnerCommand}" />
+                    </Grid.GestureRecognizers>
+                    <Border BackgroundColor="#F0F8FF" HeightRequest="50" WidthRequest="50" StrokeShape="RoundRectangle 25" StrokeThickness="0">
+                        <Label Text="✂️" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                        <Label Text="Sou Profissional" FontSize="18" FontAttributes="Bold" TextColor="#333" />
+                        <Label Text="Gerenciar agenda e serviços" FontSize="13" TextColor="#999" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="1" Text="›" FontSize="24" TextColor="#DDD" HorizontalOptions="End" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <Border StrokeThickness="0" BackgroundColor="White" HeightRequest="110" StrokeShape="RoundRectangle 15" Margin="0,0,0,15"
+                    IsEnabled="{Binding CanAccessSupplier}">
+                <Border.Triggers>
+                    <Trigger TargetType="Border" Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.5" />
+                        <Setter Property="BackgroundColor" Value="#F0F0F0" />
+                    </Trigger>
+                </Border.Triggers>
+
+                <Grid ColumnDefinitions="80, *" Padding="15">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectSupplierCommand}" />
+                    </Grid.GestureRecognizers>
+                    <Border BackgroundColor="#F0FFF0" HeightRequest="50" WidthRequest="50" StrokeShape="RoundRectangle 25" StrokeThickness="0">
+                        <Label Text="📦" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                        <Label Text="Sou Fornecedor" FontSize="18" FontAttributes="Bold" TextColor="#333" />
+                        <Label Text="Vender produtos e estoque" FontSize="13" TextColor="#999" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="1" Text="›" FontSize="24" TextColor="#DDD" HorizontalOptions="End" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

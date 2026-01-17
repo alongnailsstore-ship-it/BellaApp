@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.PartnerViewModels"
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             x:Class="BellaLink.App.Views.PartnerViews.PartnerPromoPage"
+             Title="Criar Promoção"
+             BackgroundColor="White"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, *">
+
+        <Grid ColumnDefinitions="Auto, *" Padding="20" BackgroundColor="White">
+            <ImageButton Grid.Column="0" 
+                         Command="{Binding GoBackCommand}" 
+                         Source="{FontImageSource Glyph='⬅', Color='#333', Size=30}"
+                         HorizontalOptions="Start"
+                         BackgroundColor="Transparent"
+                         HeightRequest="40" WidthRequest="40"/>
+
+            <Label Grid.Column="1" Text="Nova Promoção" FontSize="20" FontAttributes="Bold" TextColor="#FF4081" 
+                   VerticalOptions="Center" HorizontalOptions="Center" Margin="-40,0,0,0"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" Padding="25">
+            <VerticalStackLayout Spacing="25">
+
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="1. Arte do Banner" FontAttributes="Bold" TextColor="#333"/>
+
+                    <Border Stroke="#CCC" StrokeThickness="1" BackgroundColor="#F5F5F5" 
+                            HeightRequest="180" StrokeShape="RoundRectangle 10">
+                        <Grid>
+                            <Image Source="{Binding SelectedImageUrl}" Aspect="AspectFill"/>
+                            <Button Text="📷 Escolher Foto" 
+                                    Command="{Binding SelectImageCommand}"
+                                    BackgroundColor="White" TextColor="#333" Opacity="0.9"
+                                    HorizontalOptions="Center" VerticalOptions="Center"
+                                    IsVisible="{Binding SelectedImageUrl, Converter={StaticResource StringNotNullOrEmptyConverter}, ConverterParameter=Inverse}"/>
+
+                            <ImageButton Command="{Binding SelectImageCommand}"
+                                         Source="{FontImageSource Glyph='🔄', Color='White', Size=20}"
+                                         BackgroundColor="#FF4081" CornerRadius="20" HeightRequest="40" WidthRequest="40"
+                                         HorizontalOptions="End" VerticalOptions="Start" Margin="10"
+                                         IsVisible="{Binding SelectedImageUrl, Converter={StaticResource StringNotNullOrEmptyConverter}}"/>
+                        </Grid>
+                    </Border>
+                    <Label Text="{Binding StatusMessage}" TextColor="#666" FontSize="12" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="2. Título da Promoção" FontAttributes="Bold" TextColor="#333"/>
+                    <Border Stroke="#DDD" StrokeShape="RoundRectangle 8" HeightRequest="50" Padding="15,0">
+                        <Entry Text="{Binding Title}" Placeholder="Ex: Queima de Estoque" TextColor="#333"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="3. Duração (Dias)" FontAttributes="Bold" TextColor="#333"/>
+                    <Border Stroke="#DDD" StrokeShape="RoundRectangle 8" HeightRequest="50" Padding="15,0">
+                        <Entry Text="{Binding DurationInput}" Keyboard="Numeric" MaxLength="2" TextColor="#333"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <Button Text="PUBLICAR AGORA" 
+                        Command="{Binding PublishBannerCommand}"
+                        BackgroundColor="#FF4081" TextColor="White" FontAttributes="Bold"
+                        HeightRequest="55" CornerRadius="28" Margin="0,30,0,0"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
+                           Color="#FF4081" VerticalOptions="Center" HorizontalOptions="Center" Grid.RowSpan="2"/>
+    </Grid>
+</ContentPage>

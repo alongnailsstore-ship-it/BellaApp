@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.ConsumerViewModels"
+             x:Class="BellaLink.App.Views.ConsumerViews.MyAppointmentsPage"
+             Title="Meus Agendamentos"
+             BackgroundColor="#F5F5F5"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <Border Grid.Row="0" BackgroundColor="White" Padding="20" StrokeThickness="0" Shadow="{Shadow Brush=Black, Offset='0,5', Opacity=0.1}">
+            <Label Text="Meus Agendamentos" FontSize="22" FontAttributes="Bold" TextColor="#333" HorizontalOptions="Center"/>
+        </Border>
+
+        <RefreshView Grid.Row="1" Command="{Binding LoadAppointmentsCommand}" IsRefreshing="{Binding IsBusy}" RefreshColor="#FF4081">
+
+            <CollectionView ItemsSource="{Binding MyAppointmentsList}" Margin="20">
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" Opacity="0.5">
+                        <Label Text="📅" FontSize="60" HorizontalOptions="Center"/>
+                        <Label Text="Nenhum agendamento aqui." TextColor="#999" FontSize="18"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="White" StrokeShape="RoundRectangle 15" Margin="0,0,0,15" Padding="0" StrokeThickness="0">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="2,2" Opacity="0.1" Radius="5"/>
+                            </Border.Shadow>
+
+                            <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="80, *">
+
+                                <Border Grid.RowSpan="2" Grid.Column="0" BackgroundColor="#F9F9F9" StrokeThickness="0" WidthRequest="80">
+                                    <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                                        <Label Text="{Binding Date, StringFormat='{0:MMM}'}" 
+                                               TextColor="#FF4081" FontSize="14" HorizontalOptions="Center" TextTransform="Uppercase" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Date, StringFormat='{0:dd}'}" 
+                                               TextColor="#333" FontSize="28" HorizontalOptions="Center" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Date, StringFormat='{0:HH:mm}'}" 
+                                               TextColor="#999" FontSize="12" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Padding="15,15,15,5" Spacing="5">
+                                    <Label Text="{Binding ServiceName}" FontAttributes="Bold" FontSize="16" TextColor="#333" LineBreakMode="TailTruncation"/>
+                                    <Label Text="{Binding PartnerName}" TextColor="#666" FontSize="14" LineBreakMode="TailTruncation"/>
+
+                                    <Border HorizontalOptions="Start" Padding="8,2" StrokeShape="RoundRectangle 5" StrokeThickness="0" Margin="0,5,0,0">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="BackgroundColor" Value="#EEE"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger TargetType="Border" Binding="{Binding Status}" Value="Pendente">
+                                                        <Setter Property="BackgroundColor" Value="#FFF8E1"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Border" Binding="{Binding Status}" Value="Confirmado">
+                                                        <Setter Property="BackgroundColor" Value="#E8F5E9"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Border" Binding="{Binding Status}" Value="Cancelado">
+                                                        <Setter Property="BackgroundColor" Value="#FFEBEE"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Label Text="{Binding Status}" FontSize="12" FontAttributes="Bold">
+                                            <Label.Style>
+                                                <Style TargetType="Label">
+                                                    <Setter Property="TextColor" Value="#666"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Pendente">
+                                                            <Setter Property="TextColor" Value="#FFA000"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Confirmado">
+                                                            <Setter Property="TextColor" Value="#2E7D32"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Cancelado">
+                                                            <Setter Property="TextColor" Value="#C62828"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Label.Style>
+                                        </Label>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Spacing="15" Padding="15,0,15,15" HorizontalOptions="End">
+
+                                    <Label Text="Reagendar" TextColor="#2196F3" FontSize="12" FontAttributes="Bold" IsVisible="False">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyAppointmentsViewModel}}, Path=RescheduleAppointmentCommand}" CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Cancelado">
+                                                <Setter Property="IsVisible" Value="True"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Concluído">
+                                                <Setter Property="IsVisible" Value="True"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+
+                                    <Label Text="Cancelar" TextColor="#F44336" FontSize="12" TextDecorations="Underline" IsVisible="False">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyAppointmentsViewModel}}, Path=CancelAppointmentCommand}" CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Pendente">
+                                                <Setter Property="IsVisible" Value="True"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Confirmado">
+                                                <Setter Property="IsVisible" Value="True"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+
+                                    <Label Text="🗑️ Excluir" TextColor="#999" FontSize="12" IsVisible="False">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyAppointmentsViewModel}}, Path=DeleteAppointmentCommand}" CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Cancelado">
+                                                <Setter Property="IsVisible" Value="True"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+
+                                </HorizontalStackLayout>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

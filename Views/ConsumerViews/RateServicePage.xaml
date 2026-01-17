@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.ConsumerViewModels"
+             x:Class="BellaLink.App.Views.ConsumerViews.RateServicePage"
+             Title="Avaliar Serviço"
+             BackgroundColor="White"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+        <ImageButton Grid.Row="0" Command="{Binding GoBackCommand}" Source="{FontImageSource Glyph='⬅', Color='#333', Size=30}" HorizontalOptions="Start" Margin="20"/>
+
+        <VerticalStackLayout Grid.Row="1" Padding="30" Spacing="20" VerticalOptions="Center">
+
+            <Label Text="Como foi o atendimento?" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#333"/>
+            <Label Text="{Binding PartnerName, StringFormat='Profissional: {0}'}" FontSize="16" HorizontalOptions="Center" TextColor="#666"/>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Button Text="★" TextColor="{Binding Color1}" FontSize="40" BackgroundColor="Transparent" Command="{Binding SetRatingCommand}" CommandParameter="1"/>
+                <Button Text="★" TextColor="{Binding Color2}" FontSize="40" BackgroundColor="Transparent" Command="{Binding SetRatingCommand}" CommandParameter="2"/>
+                <Button Text="★" TextColor="{Binding Color3}" FontSize="40" BackgroundColor="Transparent" Command="{Binding SetRatingCommand}" CommandParameter="3"/>
+                <Button Text="★" TextColor="{Binding Color4}" FontSize="40" BackgroundColor="Transparent" Command="{Binding SetRatingCommand}" CommandParameter="4"/>
+                <Button Text="★" TextColor="{Binding Color5}" FontSize="40" BackgroundColor="Transparent" Command="{Binding SetRatingCommand}" CommandParameter="5"/>
+            </HorizontalStackLayout>
+
+            <Label Text="{Binding Rating, StringFormat='Nota: {0}'}" HorizontalOptions="Center" TextColor="#333" FontAttributes="Bold"/>
+
+            <Editor Placeholder="Escreva um comentário (opcional)..." 
+                    Text="{Binding Comment}"
+                    HeightRequest="100" 
+                    BackgroundColor="#F0F0F0" 
+                    TextColor="Black"/>
+
+            <Button Text="Enviar Avaliação" 
+                    Command="{Binding SubmitReviewCommand}" 
+                    BackgroundColor="#FF4081" 
+                    TextColor="White" 
+                    CornerRadius="25" 
+                    HeightRequest="50"
+                    FontAttributes="Bold"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

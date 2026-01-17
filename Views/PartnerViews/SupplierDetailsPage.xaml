@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.PartnerViewModels"
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             x:Class="BellaLink.App.Views.PartnerViews.SupplierDetailsPage"
+             Title="Detalhes do Fornecedor"
+             BackgroundColor="#F5F7FA"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+        <Border Grid.Row="0" Padding="0" StrokeThickness="0" BackgroundColor="White">
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,5" Opacity="0.2" Radius="5"/>
+            </Border.Shadow>
+
+            <Grid RowDefinitions="200, Auto">
+                <Image Source="{Binding CurrentSupplier.SupplierPhoto, TargetNullValue='https://via.placeholder.com/500x200?text=Fornecedor'}" 
+                       Aspect="AspectFill" HeightRequest="200"/>
+
+                <BoxView Color="Black" Opacity="0.4" HeightRequest="200"/>
+
+                <ImageButton Command="{Binding GoBackCommand}" 
+                             Source="{FontImageSource Glyph='⬅', Color='White', Size=30}"
+                             HorizontalOptions="Start" VerticalOptions="Start" Margin="20,40" BackgroundColor="Transparent"/>
+
+                <VerticalStackLayout Grid.Row="0" VerticalOptions="End" Padding="20">
+                    <Label Text="{Binding CurrentSupplier.StoreName}" TextColor="White" FontSize="24" FontAttributes="Bold"/>
+                    <Label Text="{Binding CurrentSupplier.Addresses[0].City}" TextColor="#EEE" FontSize="14"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="10">
+                    <Label Text="{Binding CurrentSupplier.StoreDescription}" TextColor="#555" FontSize="14"/>
+
+                    <FlexLayout Wrap="Wrap" JustifyContent="Start" Direction="Row">
+                        <Border IsVisible="{Binding CurrentSupplier.SupplierAcceptsPix}" BackgroundColor="#E0F2F1" StrokeThickness="0" Padding="8,4" Margin="0,0,5,5" StrokeShape="RoundRectangle 5">
+                            <Label Text="Pix" TextColor="#00695C" FontSize="11"/>
+                        </Border>
+                        <Border IsVisible="{Binding CurrentSupplier.SupplierAcceptsCreditCard}" BackgroundColor="#E0F2F1" StrokeThickness="0" Padding="8,4" Margin="0,0,5,5" StrokeShape="RoundRectangle 5">
+                            <Label Text="Cartão" TextColor="#00695C" FontSize="11"/>
+                        </Border>
+                        <Border IsVisible="{Binding CurrentSupplier.DeliveryMotoboy}" BackgroundColor="#FFF3E0" StrokeThickness="0" Padding="8,4" Margin="0,0,5,5" StrokeShape="RoundRectangle 5">
+                            <Label Text="🚀 Entrega Rápida" TextColor="#E65100" FontSize="11"/>
+                        </Border>
+                        <Border IsVisible="{Binding CurrentSupplier.DeliveryPickup}" BackgroundColor="#FFF3E0" StrokeThickness="0" Padding="8,4" Margin="0,0,5,5" StrokeShape="RoundRectangle 5">
+                            <Label Text="📍 Retirada" TextColor="#E65100" FontSize="11"/>
+                        </Border>
+                    </FlexLayout>
+
+                    <Button Text="Conversar no WhatsApp" Command="{Binding ContactSupplierCommand}" 
+                            BackgroundColor="#25D366" TextColor="White" FontAttributes="Bold" CornerRadius="20" HeightRequest="40"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Products}" Margin="10">
+            <CollectionView.Header>
+                <Label Text="Catálogo Completo" FontAttributes="Bold" FontSize="18" TextColor="#333" Margin="10"/>
+            </CollectionView.Header>
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="10" VerticalItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border StrokeShape="RoundRectangle 10" BackgroundColor="White" StrokeThickness="0" Padding="0">
+                        <Grid RowDefinitions="120, Auto, Auto, Auto" Padding="10">
+                            <Image Grid.Row="0" Source="{Binding ImageUrl}" Aspect="AspectFill" HeightRequest="120" WidthRequest="120"/>
+
+                            <Label Grid.Row="1" Text="{Binding Name}" FontAttributes="Bold" LineBreakMode="TailTruncation" TextColor="#333" Margin="0,5,0,0"/>
+                            <Label Grid.Row="2" Text="{Binding Price, StringFormat='R$ {0:F2}'}" TextColor="#27AE60" FontAttributes="Bold"/>
+
+                            <Button Grid.Row="3" Text="Pedir" FontSize="12" HeightRequest="35" Padding="0" CornerRadius="5" Margin="0,5,0,0"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SupplierDetailsViewModel}}, Path=AddToCartCommand}"
+                                    CommandParameter="{Binding .}"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10" Padding="30">
+                    <Label Text="📦" FontSize="40" HorizontalOptions="Center"/>
+                    <Label Text="Nenhum produto cadastrado ainda." TextColor="#999" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <ActivityIndicator Grid.RowSpan="2" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
+                           Color="#FF4081" VerticalOptions="Center" HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

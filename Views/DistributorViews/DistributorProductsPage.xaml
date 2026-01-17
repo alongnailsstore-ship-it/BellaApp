@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.DistributorViewModels"
+             x:Class="BellaLink.App.Views.DistributorViews.DistributorProductsPage"
+             Title="Meus Produtos"
+             BackgroundColor="#F5F7FA"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <Grid ColumnDefinitions="Auto, *, Auto" Padding="20" BackgroundColor="White">
+            <ImageButton Grid.Column="0" 
+                         Command="{Binding GoBackCommand}" 
+                         Source="{FontImageSource Glyph='⬅', Color='#333', Size=25}" 
+                         HorizontalOptions="Start"
+                         BackgroundColor="Transparent"
+                         HeightRequest="40" WidthRequest="40"/>
+
+            <Label Grid.Column="1" Text="Meus Produtos" FontSize="18" FontAttributes="Bold" TextColor="#2C3E50" VerticalOptions="Center" HorizontalOptions="Center"/>
+
+            <ImageButton Grid.Column="2" Command="{Binding ToggleAddNewCommand}" Source="{FontImageSource Glyph='+', Color='#27AE60', Size=30}" HorizontalOptions="End" BackgroundColor="Transparent"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" Padding="15">
+            <VerticalStackLayout Spacing="15">
+
+                <Border IsVisible="{Binding IsAddingNew}" StrokeShape="RoundRectangle 10" BackgroundColor="White" Padding="15" StrokeThickness="0">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Novo Produto" FontAttributes="Bold" TextColor="#333"/>
+                        <Entry Placeholder="Nome do Produto" Text="{Binding NewName}" TextColor="#333"/>
+                        <Entry Placeholder="Descrição" Text="{Binding NewDescription}" TextColor="#333"/>
+                        <Grid ColumnDefinitions="*, *">
+                            <Entry Placeholder="Preço (R$)" Text="{Binding NewPriceText}" Keyboard="Numeric" TextColor="#333"/>
+                            <Entry Grid.Column="1" Placeholder="Estoque (Qtd)" Text="{Binding NewStockText}" Keyboard="Numeric" TextColor="#333"/>
+                        </Grid>
+                        <Button Text="Salvar Produto" Command="{Binding SaveProductCommand}" BackgroundColor="#27AE60" TextColor="White"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <CollectionView ItemsSource="{Binding Products}">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10" Padding="30">
+                            <Label Text="📦" FontSize="40" HorizontalOptions="Center"/>
+                            <Label Text="Nenhum produto cadastrado." TextColor="#999" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeShape="RoundRectangle 10" BackgroundColor="White" Padding="10" Margin="0,0,0,10" StrokeThickness="0">
+                                <Grid ColumnDefinitions="60, *, Auto">
+                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill" HeightRequest="60" WidthRequest="60" BackgroundColor="#EEE"/>
+
+                                    <VerticalStackLayout Grid.Column="1" Margin="10,0" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="#333"/>
+                                        <Label Text="{Binding Price, StringFormat='R$ {0:F2}'}" TextColor="#27AE60" FontAttributes="Bold"/>
+                                        <Label Text="{Binding StockQuantity, StringFormat='Estoque: {0}'}" FontSize="12" TextColor="#999"/>
+                                    </VerticalStackLayout>
+
+                                    <ImageButton Grid.Column="2" 
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DistributorProductsViewModel}}, Path=DeleteProductCommand}" 
+                                                 CommandParameter="{Binding .}"
+                                                 Source="{FontImageSource Glyph='🗑', Color='#E74C3C', Size=20}" 
+                                                 VerticalOptions="Center" BackgroundColor="Transparent"
+                                                 HeightRequest="40" WidthRequest="40"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#27AE60" HorizontalOptions="Center" VerticalOptions="Center" Grid.RowSpan="2"/>
+    </Grid>
+</ContentPage>

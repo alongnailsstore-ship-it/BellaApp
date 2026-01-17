@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.ConsumerViewModels"
+             x:Class="BellaLink.App.Views.ConsumerViews.ShortsCommentsPage"
+             x:Name="CommentsPageRoot"
+             Title="Comentários"
+             BackgroundColor="White">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <CollectionView Grid.Row="0" ItemsSource="{Binding Comments}" Margin="10">
+            <CollectionView.EmptyView>
+                <Label Text="Seja o primeiro a comentar!" 
+                       HorizontalOptions="Center" VerticalOptions="Center" TextColor="Gray"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout Padding="0,0,0,15">
+
+                        <Grid ColumnDefinitions="Auto, *">
+                            <Border StrokeShape="RoundRectangle 20" HeightRequest="40" WidthRequest="40" Margin="0,0,10,0" VerticalOptions="Start" StrokeThickness="0">
+                                <Image Source="{Binding UserPhoto}" Aspect="AspectFill"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                <Label Text="{Binding UserName}" FontAttributes="Bold" TextColor="#333" FontSize="13"/>
+                                <Label Text="{Binding Text}" TextColor="#555" FontSize="14"/>
+                                <HorizontalStackLayout Spacing="15" Margin="0,5,0,0">
+                                    <Label Text="{Binding CreatedAt, StringFormat='{0:dd MMM}'}" TextColor="#999" FontSize="11"/>
+                                    <Label Text="Responder" TextColor="#777" FontSize="11" FontAttributes="Bold">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference CommentsPageRoot}, Path=BindingContext.ReplyToCommentCommand}" CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    <Label Text="Denunciar" TextColor="#FF4081" FontSize="11">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference CommentsPageRoot}, Path=BindingContext.ReportCommentCommand}" CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding VisibleReplies}" 
+                                             Margin="50,10,0,0" 
+                                             Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="Auto, *">
+                                        <Border StrokeShape="RoundRectangle 15" HeightRequest="30" WidthRequest="30" Margin="0,0,10,0" VerticalOptions="Start" StrokeThickness="0">
+                                            <Image Source="{Binding UserPhoto}" Aspect="AspectFill"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="1">
+                                            <Label Text="{Binding UserName}" FontAttributes="Bold" TextColor="#333" FontSize="12"/>
+                                            <Label Text="{Binding Text}" TextColor="#555" FontSize="13"/>
+                                            <HorizontalStackLayout Spacing="10" Margin="0,2,0,0">
+                                                <Label Text="{Binding CreatedAt, StringFormat='{0:dd MMM}'}" TextColor="#999" FontSize="10"/>
+                                                <Label Text="Denunciar" TextColor="#FF4081" FontSize="10">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding Source={x:Reference CommentsPageRoot}, Path=BindingContext.ReportCommentCommand}" CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <HorizontalStackLayout Margin="50,10,0,0" Spacing="5" IsVisible="{Binding HasMoreReplies}">
+                            <Label Text="{Binding ShowMoreText}" TextColor="#666" FontSize="12" FontAttributes="Bold" VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference CommentsPageRoot}, Path=BindingContext.ShowMoreRepliesCommand}" 
+                                                          CommandParameter="{Binding .}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <VerticalStackLayout Grid.Row="1" BackgroundColor="#F0F0F0">
+            <Grid ColumnDefinitions="*, Auto" BackgroundColor="#E0E0E0" Padding="15,8" IsVisible="{Binding IsReplying}">
+                <Label Text="{Binding ReplyingToName}" TextColor="#444" FontSize="12" FontAttributes="Bold" VerticalOptions="Center"/>
+                <ImageButton Grid.Column="1" Source="{FontImageSource Glyph='✕', Color='#666', Size=16}" BackgroundColor="Transparent" Command="{Binding CancelReplyCommand}" HeightRequest="25" WidthRequest="25"/>
+            </Grid>
+            <Grid ColumnDefinitions="*, Auto" Padding="10">
+                <Border StrokeShape="RoundRectangle 20" StrokeThickness="0" BackgroundColor="White" HeightRequest="40">
+                    <Entry Placeholder="Adicione um comentário..." Text="{Binding NewCommentText}" TextColor="Black" PlaceholderColor="Gray" Margin="10,0" VerticalOptions="Center"/>
+                </Border>
+                <ImageButton Grid.Column="1" Command="{Binding SendCommentCommand}" Source="{FontImageSource Glyph='➤', Color='#FF4081', Size=25}" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" Margin="10,0,0,0"/>
+            </Grid>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels"
+             x:Class="BellaLink.App.Views.UserProfilePage"
+             Title="Meu Perfil"
+             BackgroundColor="#F9F9F9"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <converters:StringIsNullOrEmptyConverter x:Key="StringIsNullOrEmptyConverter" />
+        <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid BackgroundColor="White" Padding="20" ColumnDefinitions="Auto,*">
+            <ImageButton Command="{Binding GoBackCommand}" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" HorizontalOptions="Start">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="⬅" Color="#333" Size="28"/>
+                </ImageButton.Source>
+            </ImageButton>
+            <Label Grid.Column="1" Text="Editar Perfil" FontSize="20" FontAttributes="Bold" TextColor="#333"
+                   VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,40,0"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" Padding="20">
+            <VerticalStackLayout Spacing="20">
+
+                <Border BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Dados Pessoais" FontAttributes="Bold" TextColor="#FF4081"/>
+                        <Grid HeightRequest="100" WidthRequest="100" HorizontalOptions="Center">
+                            <Border StrokeShape="RoundRectangle 50" StrokeThickness="0">
+                                <Image Source="{Binding CurrentUser.PhotoUrl}" Aspect="AspectFill" BackgroundColor="#EEE"/>
+                            </Border>
+                            <ImageButton Command="{Binding ChangePhotoCommand}" Source="{FontImageSource Glyph='📷', Color='White', Size=20}"
+                                         BackgroundColor="#FF4081" CornerRadius="15" HeightRequest="30" WidthRequest="30"
+                                         VerticalOptions="End" HorizontalOptions="End"/>
+                        </Grid>
+
+                        <Entry Text="{Binding CurrentUser.Name}" Placeholder="Nome Completo" TextColor="#333"/>
+                        <Entry Text="{Binding CurrentUser.WhatsApp}" Placeholder="WhatsApp" Keyboard="Telephone" TextColor="#333"/>
+
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Entry Text="{Binding ZipCode}" Placeholder="CEP" Keyboard="Numeric" TextColor="#333" MaxLength="9"/>
+                            <ActivityIndicator Grid.Column="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="#FF4081"/>
+                        </Grid>
+                        <Entry Text="{Binding CurrentUser.Addresses[0].Street}" Placeholder="Rua" TextColor="#333" IsReadOnly="True" BackgroundColor="#F5F5F5"/>
+                        <Grid ColumnDefinitions="*, *">
+                            <Entry Grid.Column="0" Text="{Binding CurrentUser.Addresses[0].Number}" Placeholder="Número" TextColor="#333"/>
+                            <Entry Grid.Column="1" Text="{Binding CurrentUser.Addresses[0].City}" Placeholder="Cidade" TextColor="#333" IsReadOnly="True" BackgroundColor="#F5F5F5"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0" IsVisible="{Binding IsPartner}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Dados do Profissional/Salão" FontAttributes="Bold" TextColor="#FF4081"/>
+                        <Entry Text="{Binding CurrentUser.StoreName}" Placeholder="Nome do Salão" TextColor="#333"/>
+                        <Editor Text="{Binding CurrentUser.StoreDescription}" Placeholder="Sobre você..." HeightRequest="80" TextColor="#333"/>
+
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="Aceito Pix" VerticalOptions="Center" TextColor="#333"/>
+                            <Switch Grid.Column="1" IsToggled="{Binding CurrentUser.AcceptsPix}" OnColor="#FF4081"/>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="#EEE"/>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="Tenho Maquininha" VerticalOptions="Center" TextColor="#333"/>
+                            <Switch Grid.Column="1" IsToggled="{Binding CurrentUser.AcceptsCredit}" OnColor="#FF4081"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0" 
+                        IsVisible="{Binding CurrentUser.IsSupplier}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Configurações da Distribuidora" FontAttributes="Bold" TextColor="#2C3E50"/>
+
+                        <Entry Text="{Binding CurrentUser.StoreName}" Placeholder="Nome da Distribuidora" TextColor="#333"/>
+                        <Editor Text="{Binding CurrentUser.StoreDescription}" Placeholder="Descrição da loja..." HeightRequest="60" TextColor="#333"/>
+                        <Entry Text="{Binding CurrentUser.Cnpj}" Placeholder="CNPJ (Opcional)" Keyboard="Numeric" TextColor="#333"/>
+
+                        <Label Text="Formas de Pagamento" FontAttributes="Bold" FontSize="12" TextColor="#999" Margin="0,5,0,0"/>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="Aceita Pix" VerticalOptions="Center" TextColor="#333"/>
+                            <Switch Grid.Column="1" IsToggled="{Binding CurrentUser.SupplierAcceptsPix}" OnColor="#2C3E50"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="Boleto Bancário" VerticalOptions="Center" TextColor="#333"/>
+                            <Switch Grid.Column="1" IsToggled="{Binding CurrentUser.SupplierAcceptsBoleto}" OnColor="#2C3E50"/>
+                        </Grid>
+
+                        <Label Text="Logística de Entrega" FontAttributes="Bold" FontSize="12" TextColor="#999" Margin="0,5,0,0"/>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="Entrega Própria (Motoboy)" VerticalOptions="Center" TextColor="#333"/>
+                            <Switch Grid.Column="1" IsToggled="{Binding CurrentUser.DeliveryMotoboy}" OnColor="#2C3E50"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="Retirada no Local" VerticalOptions="Center" TextColor="#333"/>
+                            <Switch Grid.Column="1" IsToggled="{Binding CurrentUser.DeliveryPickup}" OnColor="#2C3E50"/>
+                        </Grid>
+
+                        <Label Text="Pedido Mínimo (R$)" FontSize="12" TextColor="#999"/>
+                        <Entry Text="{Binding CurrentUser.MinOrderValue}" Keyboard="Numeric" Placeholder="0,00" TextColor="#333"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button Text="SALVAR TUDO" Command="{Binding SaveChangesCommand}"
+                        BackgroundColor="#FF4081" TextColor="White" CornerRadius="25" HeightRequest="50" FontAttributes="Bold" Margin="0,10,0,0"/>
+
+                <Button Text="Sair da conta" Command="{Binding LogoutCommand}" TextColor="Red" BackgroundColor="Transparent"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                           Color="#FF4081" VerticalOptions="Center" HorizontalOptions="Center" Grid.RowSpan="2"/>
+    </Grid>
+</ContentPage>

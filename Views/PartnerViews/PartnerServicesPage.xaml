@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.PartnerViewModels"
+             x:Class="BellaLink.App.Views.PartnerViews.PartnerServicesPage"
+             Title="Meus Serviços"
+             BackgroundColor="#F9F9F9"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <Grid RowDefinitions="Auto, *">
+
+            <Grid BackgroundColor="White" Padding="20" HeightRequest="80" ColumnDefinitions="*, Auto">
+                <Label Text="Meus Serviços" FontSize="22" FontAttributes="Bold" TextColor="#333" VerticalOptions="Center"/>
+                <ImageButton Command="{Binding ExitToProfilesCommand}" Grid.Column="1" HeightRequest="30" WidthRequest="30" Source="{FontImageSource Glyph='❌', Color='#999', Size=20}"/>
+            </Grid>
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Spacing="15" Padding="20">
+                    <Label Text="Gerencie seu cardápio" TextColor="#666" FontSize="14"/>
+
+                    <CollectionView ItemsSource="{Binding MyServices}" HeightRequest="500">
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                                <Label Text="📋" FontSize="40" HorizontalOptions="Center"/>
+                                <Label Text="Nenhum serviço cadastrado." TextColor="#999"/>
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeThickness="0" BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="15" Margin="0,0,0,10">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <VerticalStackLayout Spacing="5">
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" TextColor="#333"/>
+
+                                            <Border BackgroundColor="#E3F2FD" StrokeThickness="0" HorizontalOptions="Start" Padding="8,2" StrokeShape="RoundRectangle 5">
+                                                <Label Text="{Binding CategoryDisplay}" FontSize="10" TextColor="#1565C0" FontAttributes="Bold"/>
+                                            </Border>
+
+                                            <Label Text="{Binding DurationDisplay}" FontSize="12" TextColor="#999"/>
+                                        </VerticalStackLayout>
+
+                                        <VerticalStackLayout Grid.Column="1" Spacing="10" HorizontalOptions="End">
+                                            <Label Text="{Binding PriceDisplay}" FontAttributes="Bold" TextColor="#FF4081" HorizontalOptions="End"/>
+                                            <ImageButton Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PartnerServicesViewModel}}, Path=DeleteServiceCommand}" CommandParameter="{Binding .}"
+                                                         Source="{FontImageSource Glyph='🗑', Color='Red', Size=20}" HeightRequest="30" WidthRequest="30" BackgroundColor="Transparent"/>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+
+        <Button Text="+" Command="{Binding ShowFormCommand}" 
+                BackgroundColor="#FF4081" TextColor="White" FontSize="30" CornerRadius="30" 
+                HeightRequest="60" WidthRequest="60" 
+                VerticalOptions="End" HorizontalOptions="End" Margin="20"
+                Shadow="{Shadow Brush=Black, Offset='0,4', Opacity=0.3}"/>
+
+        <Grid BackgroundColor="#90000000" IsVisible="{Binding IsFormVisible}">
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 15" WidthRequest="320" VerticalOptions="Center" Padding="20">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Novo Serviço" FontSize="18" FontAttributes="Bold" TextColor="#333" HorizontalOptions="Center"/>
+
+                    <Border Stroke="#DDD" StrokeShape="RoundRectangle 8" HeightRequest="45" Padding="10,0">
+                        <Entry Placeholder="Nome (Ex: Corte Masculino)" Text="{Binding NewServiceName}" TextColor="#333"/>
+                    </Border>
+
+                    <Border Stroke="#DDD" StrokeShape="RoundRectangle 8" HeightRequest="45" Padding="10,0">
+                        <Picker Title="Selecione a Categoria" 
+                                ItemsSource="{Binding Categories}" 
+                                SelectedItem="{Binding SelectedCategory}"
+                                TextColor="#333" TitleColor="#999"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <Border Grid.Column="0" Stroke="#DDD" StrokeShape="RoundRectangle 8" HeightRequest="45" Padding="10,0">
+                            <Entry Placeholder="Preço (R$)" Text="{Binding NewServicePrice}" Keyboard="Numeric" TextColor="#333"/>
+                        </Border>
+                        <Border Grid.Column="1" Stroke="#DDD" StrokeShape="RoundRectangle 8" HeightRequest="45" Padding="10,0">
+                            <Entry Placeholder="Minutos" Text="{Binding NewServiceDuration}" Keyboard="Numeric" TextColor="#333"/>
+                        </Border>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelFormCommand}" BackgroundColor="#F0F0F0" TextColor="#333"/>
+                        <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveServiceCommand}" BackgroundColor="#FF4081" TextColor="White" FontAttributes="Bold"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="#FF4081" VerticalOptions="Center" HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

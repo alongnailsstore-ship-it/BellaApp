@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:BellaLink.App.Views.PartnerViews"
+       x:Class="BellaLink.App.Views.PartnerViews.PartnerShell"
+       Title="Área do Parceiro"
+       FlyoutBehavior="Disabled">
+
+    <TabBar>
+        <Tab Title="Painel" Icon="icon_dashboard.png">
+            <ShellContent ContentTemplate="{DataTemplate views:PartnerDashboardPage}" />
+        </Tab>
+
+        <Tab Title="Serviços" Icon="icon_services.png">
+            <ShellContent ContentTemplate="{DataTemplate views:PartnerServicesPage}" />
+        </Tab>
+
+        <Tab Title="Agenda" Icon="icon_calendar.png">
+            <ShellContent ContentTemplate="{DataTemplate views:PartnerAppointmentsPage}" />
+        </Tab>
+    </TabBar>
+
+</Shell>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.PartnerViewModels"
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             x:Class="BellaLink.App.Views.PartnerViews.PartnerFinancialPage"
+             Title="Controle Financeiro"
+             BackgroundColor="#F5F5F5"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, *">
+        <Grid Padding="20" BackgroundColor="White">
+            <ImageButton Command="{Binding GoBackCommand}" Source="{FontImageSource Glyph='⬅', Color='#333', Size=30}" HorizontalOptions="Start"/>
+            <Label Text="Fluxo de Caixa" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#333"/>
+            <ImageButton Command="{Binding AddTransactionCommand}" Source="{FontImageSource Glyph='➕', Color='#FF4081', Size=30}" HorizontalOptions="End"/>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="15">
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                <Border BackgroundColor="#4CAF50" StrokeShape="RoundRectangle 10" Padding="10" StrokeThickness="0">
+                    <VerticalStackLayout>
+                        <Label Text="Entradas" TextColor="White" FontSize="12"/>
+                        <Label Text="{Binding TotalIncome, StringFormat='{0:C}'}" TextColor="White" FontAttributes="Bold" FontSize="18"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border BackgroundColor="#F44336" StrokeShape="RoundRectangle 10" Padding="10" StrokeThickness="0">
+                    <VerticalStackLayout>
+                        <Label Text="Saídas" TextColor="White" FontSize="12"/>
+                        <Label Text="{Binding TotalExpense, StringFormat='{0:C}'}" TextColor="White" FontAttributes="Bold" FontSize="18"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Label Text="{Binding TotalBalance, StringFormat='Saldo: {0:C}'}" TextColor="#333" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="15" StrokeThickness="0">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Balanço Visual" FontAttributes="Bold" TextColor="#666"/>
+
+                    <Grid RowDefinitions="Auto, Auto">
+                        <Label Text="{Binding IncomePercentText, StringFormat='Receitas ({0})'}" TextColor="#4CAF50" FontSize="12"/>
+                        <ProgressBar Grid.Row="1" Progress="{Binding IncomeProgress}" ProgressColor="#4CAF50" ScaleY="2" Margin="0,5,0,0"/>
+                    </Grid>
+
+                    <Grid RowDefinitions="Auto, Auto">
+                        <Label Text="{Binding ExpensePercentText, StringFormat='Despesas ({0})'}" TextColor="#F44336" FontSize="12"/>
+                        <ProgressBar Grid.Row="1" Progress="{Binding ExpenseProgress}" ProgressColor="#F44336" ScaleY="2" Margin="0,5,0,0"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Transactions}" Margin="20,0">
+            <CollectionView.Header>
+                <Label Text="Histórico" FontAttributes="Bold" Margin="0,0,0,10" TextColor="#666"/>
+            </CollectionView.Header>
+            <CollectionView.EmptyView>
+                <Label Text="Nenhuma transação registrada." HorizontalOptions="Center" Margin="20" TextColor="#999"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Apagar" BackgroundColor="Red" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PartnerFinancialViewModel}}, Path=DeleteTransactionCommand}" CommandParameter="{Binding .}"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Border BackgroundColor="White" StrokeShape="RoundRectangle 8" Margin="0,0,0,8" Padding="15" StrokeThickness="0">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Description}" FontAttributes="Bold" TextColor="#333"/>
+                                    <Label Text="{Binding Date, StringFormat='{0:dd/MM/yyyy}'}" FontSize="12" TextColor="#999"/>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1" Text="{Binding Amount, StringFormat='{0:C}'}" 
+                                       TextColor="{Binding IsIncome, Converter={StaticResource BoolToColorConverter}}" 
+                                       FontAttributes="Bold" VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

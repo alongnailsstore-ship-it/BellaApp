@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.ConsumerViewModels"
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             x:Class="BellaLink.App.Views.ConsumerViews.PartnerDetailsPage"
+             Title="Detalhes"
+             BackgroundColor="#F5F5F5"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <converters:CompactNumberConverter x:Key="CompactNumberConverter"/>
+        <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter"/>
+    </ContentPage.Resources>
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Padding="0,0,0,90">
+
+                <Grid HeightRequest="250">
+                    <Image Source="{Binding CurrentPartner.ImageUrl}" Aspect="AspectFill" HeightRequest="250"/>
+                    <BoxView Color="Black" Opacity="0.3"/>
+                    <ImageButton Command="{Binding GoBackCommand}" 
+                                 Source="{FontImageSource Glyph='⬅', Color='White', Size=30}" 
+                                 HorizontalOptions="Start" VerticalOptions="Start" 
+                                 Margin="20,40" BackgroundColor="Transparent"/>
+                </Grid>
+
+                <VerticalStackLayout Padding="20" Spacing="15" Margin="0,-30,0,0">
+                    <Border BackgroundColor="White" StrokeShape="RoundRectangle 20" Padding="20" StrokeThickness="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding CurrentPartner.Name}" FontSize="24" FontAttributes="Bold" TextColor="#333"/>
+                            <Label Text="{Binding CurrentPartner.Category}" TextColor="#999" FontSize="14"/>
+                            <BoxView HeightRequest="1" Color="#EEE" Margin="0,5"/>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="{Binding CurrentPartner.Address}" TextColor="#666" FontSize="14"/>
+                                    <HorizontalStackLayout Spacing="15">
+                                        <HorizontalStackLayout Spacing="5">
+                                            <Label Text="★" TextColor="#FFD700"/>
+                                            <Label Text="{Binding CurrentPartner.Rating, StringFormat='{0:F1}'}" FontAttributes="Bold"/>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Spacing="5">
+                                            <Label Text="👥" TextColor="#FF4081"/>
+                                            <Label Text="{Binding FollowersCount, Converter={StaticResource CompactNumberConverter}, StringFormat='{0} Seguidores'}" 
+                                                   TextColor="#666" FontAttributes="Bold"/>
+                                        </HorizontalStackLayout>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                                <Border Grid.Column="1" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" Padding="10" VerticalOptions="Center">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding OpenNavigationCommand}" />
+                                    </Border.GestureRecognizers>
+                                    <VerticalStackLayout>
+                                        <Label Text="📍" HorizontalOptions="Center" FontSize="20"/>
+                                        <Label Text="Como chegar" TextColor="#0097A7" FontSize="10" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                        <Button Text="⭐ Avaliar" Command="{Binding GoToReviewCommand}" BackgroundColor="White" TextColor="#333" BorderColor="#DDD" BorderWidth="1" CornerRadius="10"/>
+                        <Button Text="📅 Agendar" Command="{Binding GoToBookingCommand}" BackgroundColor="#FF4081" TextColor="White" CornerRadius="10" FontAttributes="Bold"/>
+                    </Grid>
+
+                    <HorizontalStackLayout Spacing="10" Margin="0,10,0,0">
+                        <Label Text="Sobre" FontAttributes="Bold" FontSize="18" TextColor="#333" VerticalOptions="Center"/>
+
+                        <ImageButton Source="{FontImageSource Glyph='✎', Color='#FF4081', Size=20}" 
+                                     BackgroundColor="Transparent"
+                                     Command="{Binding EditAboutCommand}"
+                                     IsVisible="{Binding CanEditAbout}"
+                                     HeightRequest="30" WidthRequest="30"
+                                     VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <Label Text="{Binding CurrentPartner.Description, TargetNullValue='Nenhuma descrição informada.'}" 
+                           TextColor="#666" LineHeight="1.2"/>
+
+                    <BoxView HeightRequest="1" Color="#DDD" Margin="0,10"/>
+
+                    <Label Text="{Binding TotalReviewsCount, StringFormat='Avaliações de Clientes ({0})'}" FontAttributes="Bold" FontSize="18" TextColor="#333"/>
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding VisibleReviews}" Spacing="10">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeThickness="0" BackgroundColor="White" Padding="15" StrokeShape="RoundRectangle 10">
+                                    <VerticalStackLayout Spacing="5">
+                                        <Grid ColumnDefinitions="*, Auto">
+                                            <Label Text="{Binding ConsumerName}" FontAttributes="Bold" TextColor="#333"/>
+                                            <Label Grid.Column="1" Text="{Binding Date, StringFormat='{0:dd/MM/yy}'}" FontSize="12" TextColor="#999"/>
+                                        </Grid>
+                                        <HorizontalStackLayout Spacing="2">
+                                            <Label Text="★" TextColor="#FFD700" FontSize="14"/>
+                                            <Label Text="{Binding Rating, StringFormat='{0}.0'}" FontSize="12" TextColor="#666" VerticalOptions="Center"/>
+                                        </HorizontalStackLayout>
+                                        <Label Text="{Binding Comment}" TextColor="#555" FontSize="14" IsVisible="{Binding Comment, Converter={StaticResource StringNotNullOrEmptyConverter}}"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <Button Text="Ver todas as avaliações" Command="{Binding ToggleReviewsCommand}" BackgroundColor="Transparent" TextColor="#FF4081" FontAttributes="Bold" IsVisible="{Binding HasMoreReviews}"/>
+                    <Button Text="Ver menos" Command="{Binding ToggleReviewsCommand}" BackgroundColor="Transparent" TextColor="#666" FontSize="12" IsVisible="{Binding AreReviewsExpanded}"/>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" VerticalOptions="Center" Color="#FF4081"/>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.PartnerViewModels"
+             x:Class="BellaLink.App.Views.PartnerViews.PartnerShoppingPage"
+             Title="Lista de Compras"
+             BackgroundColor="#F5F5F5"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, Auto, *">
+        <Grid Padding="20" BackgroundColor="White">
+            <ImageButton Command="{Binding GoBackCommand}" Source="{FontImageSource Glyph='⬅', Color='#333', Size=30}" HorizontalOptions="Start"/>
+            <Label Text="Lista de Compras" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#333"/>
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Padding="20">
+            <Border StrokeShape="RoundRectangle 8" BackgroundColor="White" Padding="10,0" StrokeThickness="0">
+                <Entry Text="{Binding NewItemName}" Placeholder="Adicionar produto..." TextColor="#333" ReturnCommand="{Binding AddItemCommand}"/>
+            </Border>
+            <Button Grid.Column="1" Text="Add" Command="{Binding AddItemCommand}" BackgroundColor="#FF4081" TextColor="White" Margin="10,0,0,0"/>
+        </Grid>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Items}" Margin="20,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Apagar" BackgroundColor="Red" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PartnerShoppingViewModel}}, Path=DeleteItemCommand}" CommandParameter="{Binding .}"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Border BackgroundColor="White" StrokeShape="RoundRectangle 8" Margin="0,0,0,8" Padding="10" StrokeThickness="0">
+                            <Grid ColumnDefinitions="Auto, *">
+                                <CheckBox IsChecked="{Binding IsBought}" Color="#FF4081">
+                                    <CheckBox.Behaviors>
+                                    </CheckBox.Behaviors>
+                                </CheckBox>
+                                <Label Grid.Column="1" Text="{Binding Name}" VerticalOptions="Center" TextColor="#333">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsBought}" Value="True">
+                                            <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                            <Setter Property="TextColor" Value="#999"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PartnerShoppingViewModel}}, Path=ToggleItemCommand}" CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

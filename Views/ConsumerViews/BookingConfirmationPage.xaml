@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.ConsumerViewModels"
+             x:Class="BellaLink.App.Views.ConsumerViews.BookingConfirmationPage"
+             Title="Confirmar"
+             BackgroundColor="White"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *, Auto">
+        <Grid BackgroundColor="White" Padding="20" ColumnDefinitions="Auto,*">
+            <ImageButton Command="{Binding GoBackCommand}" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" HorizontalOptions="Start">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="⬅" Color="#333" Size="28"/>
+                </ImageButton.Source>
+            </ImageButton>
+            <Label Grid.Column="1" Text="Revisão" FontSize="20" FontAttributes="Bold" TextColor="#333"
+                   VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,40,0"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" Padding="25">
+            <VerticalStackLayout Spacing="20">
+
+                <Border StrokeThickness="0" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 15" Padding="20" HorizontalOptions="Center">
+                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Label Text="🗓️" FontSize="40" HorizontalOptions="Center"/>
+                        <Label Text="Quase lá!" FontSize="18" FontAttributes="Bold" TextColor="#006064" HorizontalOptions="Center"/>
+                        <Label Text="Confira os dados antes de finalizar." FontSize="14" TextColor="#00838F" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Detalhes do Serviço" FontAttributes="Bold" TextColor="#333" FontSize="16"/>
+
+                    <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Label Text="Local:" FontAttributes="Bold" TextColor="#666" WidthRequest="80"/>
+                                <Label Grid.Column="1" Text="{Binding Partner.Name}" TextColor="#333"/>
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="#F0F0F0"/>
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Label Text="Data:" FontAttributes="Bold" TextColor="#666" WidthRequest="80"/>
+                                <Label Grid.Column="1" Text="{Binding Date, StringFormat='{0:dd/MM/yyyy}'}" TextColor="#333"/>
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="#F0F0F0"/>
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Label Text="Hora:" FontAttributes="Bold" TextColor="#666" WidthRequest="80"/>
+                                <Label Grid.Column="1" Text="{Binding TimeStr}" TextColor="#333"/>
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="#F0F0F0"/>
+
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Label Text="Pagamento:" FontAttributes="Bold" TextColor="#666" WidthRequest="80"/>
+                                <Label Grid.Column="1" Text="{Binding PaymentMethodDisplay}" TextColor="#333"/>
+                            </Grid>
+
+                            <BoxView HeightRequest="1" Color="#F0F0F0"/>
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Label Text="Total:" FontAttributes="Bold" TextColor="#666" WidthRequest="80"/>
+                                <Label Grid.Column="1" Text="{Binding TotalAmount, StringFormat='R$ {0:F2}'}" TextColor="#FF4081" FontAttributes="Bold"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="2" Padding="20" StrokeThickness="0" BackgroundColor="White" Shadow="{Shadow Brush=Black, Offset='0,-5', Opacity=0.1}">
+            <Button Text="FINALIZAR AGENDAMENTO" 
+                    Command="{Binding ConfirmBookingCommand}"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    CornerRadius="25"/>
+        </Border>
+
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                           Color="#4CAF50" VerticalOptions="Center" HorizontalOptions="Center" Grid.RowSpan="3"/>
+    </Grid>
+</ContentPage>

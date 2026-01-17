@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="../BellaLink.Server/BellaLink.Server.csproj" Id="25d64360-be68-4373-adc0-821d8dc2e205" />
+  <Project Path="../BellaLink.Shared/BellaLink.Shared.csproj" Id="a2f043c8-cbfa-4314-b3d4-11dfac1e141e" />
+  <Project Path="../BellaLink.Web/BellaLink.Web.csproj" Id="daa1f33c-0022-4938-b424-09ca2ac6ca6b" />
+  <Project Path="BellaApp.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>

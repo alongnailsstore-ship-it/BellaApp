@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.ConsumerViewModels"
+             
+             xmlns:toolkit="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui.MediaElement"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             x:Class="BellaLink.App.Views.ConsumerViews.ShortsPage"
+             x:Name="PageRoot"
+             Title="Shorts"
+             BackgroundColor="Black"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <converters:CompactNumberConverter x:Key="CompactNumberConverter" />
+    </ContentPage.Resources>
+
+    <CarouselView x:Name="VerticalCarousel"
+                  ItemsSource="{Binding Videos}"
+                  Loop="False"
+                  VerticalScrollBarVisibility="Never"
+                  PositionChanged="OnPositionChanged">
+
+        <CarouselView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" SnapPointsType="MandatorySingle" SnapPointsAlignment="Center" />
+        </CarouselView.ItemsLayout>
+
+        <CarouselView.ItemTemplate>
+            <DataTemplate>
+                <Grid x:Name="VideoContainer">
+
+                    <Grid IsVisible="{Binding IsPlaylist}" ZIndex="5" BackgroundColor="Black">
+                        <CollectionView ItemsSource="{Binding PlaylistItems}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" SnapPointsType="MandatorySingle" SnapPointsAlignment="Start"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid WidthRequest="{Binding Source={x:Reference PageRoot}, Path=Width}" BackgroundColor="Black">
+                                        <toolkit:MediaElement ShouldShowPlaybackControls="False"
+                                                              Aspect="AspectFill"
+                                                              ShouldLoopPlayback="True">
+                                            <toolkit:MediaElement.Style>
+                                                <Style TargetType="toolkit:MediaElement">
+                                                    <Setter Property="Source" Value="{Binding VideoUrl}" />
+                                                    <Setter Property="ShouldAutoPlay" Value="True" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger TargetType="toolkit:MediaElement" 
+                                                                     Binding="{Binding Source={x:Reference VideoContainer}, Path=BindingContext.IsPlaying}" 
+                                                                     Value="False">
+                                                            <Setter Property="Source" Value="{x:Null}" />
+                                                            <Setter Property="ShouldAutoPlay" Value="False" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </toolkit:MediaElement.Style>
+                                        </toolkit:MediaElement>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <Border BackgroundColor="#80000000" StrokeThickness="0" 
+                                HorizontalOptions="End" VerticalOptions="Start" 
+                                Margin="10,50" Padding="8,4" StrokeShape="RoundRectangle 5"
+                                InputTransparent="True">
+                            <Label Text="📑 Playlist" TextColor="White" FontSize="10" FontAttributes="Bold"/>
+                        </Border>
+                    </Grid>
+
+                    <toolkit:MediaElement ShouldShowPlaybackControls="False"
+                                          Aspect="AspectFill"
+                                          ShouldLoopPlayback="True"
+                                          ZIndex="1">
+                        <toolkit:MediaElement.Style>
+                            <Style TargetType="toolkit:MediaElement">
+                                <Setter Property="Source" Value="{Binding CurrentVideoUrl}" />
+                                <Setter Property="ShouldAutoPlay" Value="True" />
+                                <Setter Property="IsVisible" Value="True" />
+                                <Style.Triggers>
+                                    <DataTrigger TargetType="toolkit:MediaElement" Binding="{Binding IsPlaylist}" Value="True">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                        <Setter Property="Source" Value="{x:Null}"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="toolkit:MediaElement" Binding="{Binding IsPlaying}" Value="False">
+                                        <Setter Property="Source" Value="{x:Null}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </toolkit:MediaElement.Style>
+                    </toolkit:MediaElement>
+
+                    <Image Source="{Binding PartnerPhoto}" Aspect="AspectFill" BackgroundColor="#111" ZIndex="0">
+                        <Image.Triggers>
+                            <DataTrigger TargetType="Image" Binding="{Binding IsPlaying}" Value="True">
+                                <Setter Property="IsVisible" Value="False"/>
+                            </DataTrigger>
+                        </Image.Triggers>
+                    </Image>
+
+                    <BoxView VerticalOptions="End" HeightRequest="400" InputTransparent="True" ZIndex="10">
+                        <BoxView.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="Transparent" Offset="0.0"/>
+                                <GradientStop Color="#CC000000" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </BoxView.Background>
+                    </BoxView>
+
+                    <Grid ColumnDefinitions="*, Auto" Padding="15,0,10,20" VerticalOptions="End" 
+                          ZIndex="11" InputTransparent="True" CascadeInputTransparent="False">
+
+                        <VerticalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="End" Margin="0,0,10,20" InputTransparent="False">
+                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                <Border Stroke="White" StrokeThickness="2" HeightRequest="45" WidthRequest="45" StrokeShape="RoundRectangle 25" BackgroundColor="Gray">
+                                    <Image Source="{Binding PartnerPhoto}" Aspect="AspectFill"/>
+                                </Border>
+                                <Label Text="{Binding PartnerName}" TextColor="White" FontAttributes="Bold" FontSize="16" VerticalOptions="Center"/>
+                                <Border StrokeThickness="0" BackgroundColor="#33FFFFFF" Padding="10,4" StrokeShape="RoundRectangle 8" VerticalOptions="Center">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ToggleFollowCommand, Source={x:Reference PageRoot}}" CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding IsFollowing, Converter={mct:BoolToObjectConverter TrueObject='Seguindo', FalseObject='Seguir'}}" 
+                                           TextColor="White" FontSize="10" FontAttributes="Bold"/>
+                                </Border>
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding Description}" TextColor="#E0E0E0" FontSize="14" MaxLines="3"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="20" VerticalOptions="End" HorizontalOptions="Center" Margin="0,0,0,30" InputTransparent="False">
+
+                            <VerticalStackLayout Spacing="2">
+                                <ImageButton Command="{Binding BindingContext.ToggleLikeCommand, Source={x:Reference PageRoot}}" CommandParameter="{Binding .}"
+                                             HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent">
+                                    <ImageButton.Source>
+                                        <FontImageSource Glyph="♥" Color="{Binding IsLikedByMe, Converter={mct:BoolToObjectConverter TrueObject='#FF4081', FalseObject='#F0F8FF'}}" Size="32" />
+                                    </ImageButton.Source>
+                                </ImageButton>
+                                <Label Text="{Binding Likes, Converter={StaticResource CompactNumberConverter}}" 
+                                       TextColor="#F0F8FF" FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="2">
+                                <ImageButton Command="{Binding BindingContext.OpenCommentsCommand, Source={x:Reference PageRoot}}" CommandParameter="{Binding .}"
+                                             HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent">
+                                    <ImageButton.Source>
+                                        <FontImageSource Glyph="💬" Color="#F0F8FF" Size="30" />
+                                    </ImageButton.Source>
+                                </ImageButton>
+                                <Label Text="{Binding CommentsCount, Converter={StaticResource CompactNumberConverter}}" 
+                                       TextColor="#F0F8FF" FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="2">
+                                <ImageButton Command="{Binding BindingContext.ShareVideoCommand, Source={x:Reference PageRoot}}" CommandParameter="{Binding .}"
+                                             HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent">
+                                    <ImageButton.Source>
+                                        <FontImageSource Glyph="↗️" Color="#F0F8FF" Size="30" />
+                                    </ImageButton.Source>
+                                </ImageButton>
+                                <Label Text="Share" TextColor="#F0F8FF" FontSize="10" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+
+                            <Border Stroke="#F0F8FF" StrokeThickness="1" BackgroundColor="#20000000" Padding="5" StrokeShape="RoundRectangle 5">
+                                <Label Text="{Binding Views, Converter={StaticResource CompactNumberConverter}, StringFormat='👁 {0}'}" 
+                                       TextColor="#F0F8FF" FontSize="10" HorizontalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout Spacing="0" Opacity="0.5" Margin="0,20,0,0">
+                                <ImageButton Command="{Binding BindingContext.ReportVideoCommand, Source={x:Reference PageRoot}}" 
+                                             CommandParameter="{Binding .}"
+                                             HeightRequest="24" WidthRequest="24" 
+                                             BackgroundColor="Transparent"
+                                             HorizontalOptions="Center">
+                                    <ImageButton.Source>
+                                        <FontImageSource Glyph="✕" Color="White" Size="16" />
+                                    </ImageButton.Source>
+                                </ImageButton>
+                                <Label Text="Denunciar" TextColor="White" FontSize="9" HorizontalTextAlignment="Center" Margin="0,-2,0,0"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </CarouselView.ItemTemplate>
+    </CarouselView>
+</ContentPage>

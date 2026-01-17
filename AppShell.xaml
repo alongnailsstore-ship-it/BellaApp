@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="BellaLink.App.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:BellaLink.App.Views"
+    xmlns:consumerViews="clr-namespace:BellaLink.App.Views.ConsumerViews"
+    xmlns:partnerViews="clr-namespace:BellaLink.App.Views.PartnerViews"
+    Title="BellaLink"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="White">
+
+    <Shell.Resources>
+        <Style x:Key="BaseStyle" TargetType="Element">
+            <Setter Property="Shell.BackgroundColor" Value="#FF4081" />
+            <Setter Property="Shell.ForegroundColor" Value="White" />
+            <Setter Property="Shell.TitleColor" Value="White" />
+            <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
+            <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
+        </Style>
+    </Shell.Resources>
+
+    <ShellContent 
+        Route="LoginPage"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Shell.FlyoutBehavior="Disabled"
+        Shell.TabBarIsVisible="False" />
+
+    <TabBar>
+        <Tab Title="Início" Icon="home_icon.png">
+            <ShellContent 
+                Route="ConsumerHomePage" 
+                ContentTemplate="{DataTemplate consumerViews:ConsumerHomePage}" />
+        </Tab>
+
+        <Tab Title="Shorts" Icon="shorts_icon.png">
+            <ShellContent 
+                Route="ShortsPage" 
+                ContentTemplate="{DataTemplate consumerViews:ShortsPage}" />
+        </Tab>
+
+        <Tab Title="Agenda" Icon="calendar_icon.png">
+            <ShellContent 
+                Route="MyAppointmentsPage" 
+                ContentTemplate="{DataTemplate consumerViews:MyAppointmentsPage}" />
+        </Tab>
+
+        <Tab Title="Perfil" Icon="user_icon.png">
+            <ShellContent 
+                Route="UserProfilePage" 
+                ContentTemplate="{DataTemplate views:UserProfilePage}" />
+        </Tab>
+    </TabBar>
+
+</Shell>

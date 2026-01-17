@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels"
+             xmlns:helpers="clr-namespace:BellaLink.App.Helpers"
+             xmlns:converters="clr-namespace:BellaLink.App.Converters"
+             x:Class="BellaLink.App.Views.ChatPage"
+             BackgroundColor="#EFE7DD" 
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
+        <helpers:MessageStatusConverter x:Key="MessageStatusConverter" />
+        <helpers:StatusIconConverter x:Key="StatusIconConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, *, Auto">
+
+        <Grid Padding="10,5" ColumnDefinitions="Auto, *, Auto" BackgroundColor="#075E54">
+            <HorizontalStackLayout VerticalOptions="Center" Spacing="5">
+                <ImageButton Command="{Binding GoBackCommand}" Source="{FontImageSource Glyph='⬅', Color='White', Size=24}" 
+                             BackgroundColor="Transparent" HeightRequest="40" WidthRequest="40"/>
+
+                <Border StrokeShape="RoundRectangle 20" HeightRequest="40" WidthRequest="40" StrokeThickness="0">
+                    <Image Source="{Binding ContactPhoto}" Aspect="AspectFill"/>
+                </Border>
+
+                <Label Text="{Binding ContactName}" FontSize="18" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <CollectionView x:Name="MessagesList" 
+                        Grid.Row="1" 
+                        ItemsSource="{Binding Messages}" 
+                        Margin="0,0,0,10">
+            <CollectionView.ItemTemplate>
+                <helpers:ChatTemplateSelector>
+
+                    <helpers:ChatTemplateSelector.MyMessageTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10,2" ColumnDefinitions="*, Auto">
+                                <Border Grid.Column="1" BackgroundColor="#DCF8C6" StrokeShape="RoundRectangle 10,0,10,10" 
+                                        StrokeThickness="0" Padding="10,5" MaximumWidthRequest="280" HorizontalOptions="End">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Image Source="{Binding ImageUrl}" Aspect="AspectFill" WidthRequest="200" HeightRequest="200" Margin="0,0,0,5"
+                                               IsVisible="{Binding ImageUrl, Converter={StaticResource StringNotNullOrEmptyConverter}}"/>
+                                        <FlexLayout Direction="Row" Wrap="Wrap" AlignItems="End" JustifyContent="SpaceBetween">
+                                            <Label Text="{Binding Text}" TextColor="Black" FontSize="16" Margin="0,0,10,0"
+                                                   IsVisible="{Binding Text, Converter={StaticResource StringNotNullOrEmptyConverter}}"/>
+                                            <HorizontalStackLayout Spacing="3" VerticalOptions="End">
+                                                <Label Text="{Binding Timestamp, StringFormat='{0:HH:mm}'}" FontSize="11" TextColor="#777"/>
+                                                <Label Text="{Binding Status, Converter={StaticResource StatusIconConverter}}" 
+                                                       TextColor="{Binding Status, Converter={StaticResource MessageStatusConverter}}" 
+                                                       FontSize="11" FontAttributes="Bold"/>
+                                            </HorizontalStackLayout>
+                                        </FlexLayout>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </helpers:ChatTemplateSelector.MyMessageTemplate>
+
+                    <helpers:ChatTemplateSelector.TheirMessageTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10,2" ColumnDefinitions="Auto, *">
+                                <Border Grid.Column="1" BackgroundColor="White" StrokeShape="RoundRectangle 0,10,10,10" 
+                                        StrokeThickness="0" Padding="10,5" MaximumWidthRequest="280" HorizontalOptions="Start">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Image Source="{Binding ImageUrl}" Aspect="AspectFill" WidthRequest="200" HeightRequest="200" Margin="0,0,0,5"
+                                               IsVisible="{Binding ImageUrl, Converter={StaticResource StringNotNullOrEmptyConverter}}"/>
+                                        <FlexLayout Direction="Row" Wrap="Wrap" AlignItems="End" JustifyContent="SpaceBetween">
+                                            <Label Text="{Binding Text}" TextColor="Black" FontSize="16" Margin="0,0,10,0"
+                                                   IsVisible="{Binding Text, Converter={StaticResource StringNotNullOrEmptyConverter}}"/>
+                                            <Label Text="{Binding Timestamp, StringFormat='{0:HH:mm}'}" FontSize="11" TextColor="#777"/>
+                                        </FlexLayout>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </helpers:ChatTemplateSelector.TheirMessageTemplate>
+
+                    <helpers:ChatTemplateSelector.DateHeaderTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10">
+                                <Border BackgroundColor="#DDF3F5" StrokeThickness="0" StrokeShape="RoundRectangle 8" 
+                                        HorizontalOptions="Center" Padding="10,4">
+                                    <Label Text="{Binding HeaderText}" TextColor="#555" FontSize="12" FontAttributes="Bold"/>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </helpers:ChatTemplateSelector.DateHeaderTemplate>
+
+                </helpers:ChatTemplateSelector>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Grid Grid.Row="2" ColumnDefinitions="Auto, *, Auto" Padding="5" BackgroundColor="Transparent">
+            <Border StrokeShape="RoundRectangle 25" HeightRequest="50" WidthRequest="50" BackgroundColor="#075E54" Margin="5">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SendImageCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="📷" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20"/>
+            </Border>
+
+            <Border Grid.Column="1" Stroke="Transparent" BackgroundColor="White" StrokeShape="RoundRectangle 25" Padding="15,0" HeightRequest="50">
+                <Entry Text="{Binding MessageText}" Placeholder="Mensagem" TextColor="Black" 
+                       VerticalOptions="Center" ReturnType="Send" ReturnCommand="{Binding SendTextCommand}"/>
+            </Border>
+
+            <Border Grid.Column="2" StrokeShape="RoundRectangle 25" HeightRequest="50" WidthRequest="50" BackgroundColor="#075E54" Margin="5">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SendTextCommand}"/>
+                </Border.GestureRecognizers>
+                <Label Text="➤" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20"/>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

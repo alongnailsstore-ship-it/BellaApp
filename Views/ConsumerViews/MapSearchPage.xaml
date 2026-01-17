@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             xmlns:vm="clr-namespace:BellaLink.App.ViewModels.ConsumerViewModels"
+             x:Class="BellaLink.App.Views.ConsumerViews.MapSearchPage"
+             Title="Explorar no Mapa"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <maps:Map x:Name="PartnersMap" IsShowingUser="True" />
+
+        <ImageButton Command="{Binding GoBackCommand}" 
+                     Source="{FontImageSource Glyph='⬅', Color='#333', Size=30}" 
+                     BackgroundColor="White" CornerRadius="25"
+                     HeightRequest="50" WidthRequest="50"
+                     HorizontalOptions="Start" VerticalOptions="Start" Margin="20"
+                     Shadow="{Shadow Brush=Black, Offset='2,2', Opacity=0.3}"/>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
+                           Color="#FF4081" HorizontalOptions="Center" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>
